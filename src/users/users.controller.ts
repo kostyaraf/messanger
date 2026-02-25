@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -11,8 +11,8 @@ export class UserController {
   }
 
   @Get(':id')
-  async getUserById(id: number) {
-    return this.usersService.getUserById(id);
+  async getUserById(@Param('id') id: number) {
+    return this.usersService.getUserById(Number(id));
   }
 
   @Post()

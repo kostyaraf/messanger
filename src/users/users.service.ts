@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { rejects } from 'assert';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { CreateUserDto } from './users.dto';
 
 @Injectable()
 export class UsersService {
@@ -19,23 +19,24 @@ export class UsersService {
 
   async getUserById(id: number) {
     console.log('>> id', id);
-    const user = new Promise((resolve) => {
+    const user = new Promise((resolve, reject) => {
       setTimeout(() => {
         const findUser = this.users.find((u) => u.id === id);
+
         if (findUser) {
           resolve(findUser);
         } else {
-          rejects(() => Promise.reject(new Error('User not found')));
+          reject(new NotFoundException('User not found'));
         }
       }, 1000);
     });
     return user;
   }
 
-  async createUser(userData: any) {
+  async createUser(userData: CreateUserDto) {
     return new Promise((resolve) => {
       setTimeout(() => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        this.users.push({ id: this.users.length + 1, name: userData.name });
         resolve({ id: 3, data: userData });
       }, 1000);
     });
